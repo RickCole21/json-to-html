@@ -1,0 +1,12 @@
+# Files
+.DS_Store
+.ruby-version
+npm-debug.log
+
+# Folders
+.idea/
+node_modules
+/lib
+/gh-pages
+/.vscode
+/package-lock.json

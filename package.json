@@ -1,0 +1,48 @@
+{
+  "name": "@rickcole/json-to-html",
+  "version": "1.0.0-rc.2",
+  "description": "a small tool convert json to html template",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --port 3000",
+    "start": "npm run dev",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RickCole21/json-to-html.git"
+  },
+  "author": "rickcole21@outlook.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RickCole21/json-to-html/issues"
+  },
+  "homepage": "https://github.com/RickCole21/json-to-html#readme",
+  "keywords": [
+    "json",
+    "html",
+    "typescript"
+  ],
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "prettier": "^1.18.2",
+    "style-loader": "^1.0.0",
+    "ts-loader": "^6.0.4",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.2.0"
+  }
+}
