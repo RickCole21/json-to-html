@@ -9,7 +9,9 @@ npm i @rickcole/json-to-html
 # Usage
 convert json object, array, string, number into html template:
 ```
-{
+import jsonToHtml from '@rickcole/json-to-html';
+
+let schema = {
     tag: 'div',
     children: [
         {
@@ -31,9 +33,11 @@ convert json object, array, string, number into html template:
             children: 'this is a span'
         }
     ]
-}
+};
+
+jsonToHtml(schema);
 ```
-result:
+result :
 ```
 <div>
     <div class="inner-div">
@@ -45,8 +49,16 @@ result:
 ```
 
 # Config
+you can use config to change the output:
+```
+jsonToHtml(schema, {
+    indent: 4,
+    wrap: true,
+    raw: false
+});
+```
 | name   | type    | default value | description                              |
 | ------ | ------- | ------------- | ---------------------------------------- |
+| indent | number  | 4             | indent                                   |
 | wrap   | boolean | true          | whether wrap the content or not          |
 | raw    | boolean | false         | escacpe the content.(e.g.,`<` to `&lt;`) |
-| indent | number  | 4             | indent                                   |
