@@ -7,7 +7,7 @@ npm i @rickcole/json-to-html
 ```
 
 # Usage
-convert json object, array, string, number into html template:
+convert json object, array into html template:
 ```
 import jsonToHtml from '@rickcole/json-to-html';
 
