@@ -18,9 +18,14 @@ const schema1 = {
                 },
             ]
         },
+        '纯字符串',
         {
             tag: 'div',
             class: 'innerDiv2',
+            extraAttrs: {
+                tag: 'sometag',
+                children: 'somechildren'
+            },
             children: [
                 {
                     tag: 'span',
@@ -54,7 +59,8 @@ document.body.appendChild(app);
 
 let config = {
     raw: true,
-    wrap: true
+    wrap: true,
+    tagField: 'tag'
 };
 
 // code

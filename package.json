@@ -1,11 +1,11 @@
 {
   "name": "@rickcole/json-to-html",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "description": "a small tool convert json to html template",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --port 3000",
+    "dev": "webpack-dev-server --port 3001",
     "start": "npm run dev",
     "build": "tsc"
   },

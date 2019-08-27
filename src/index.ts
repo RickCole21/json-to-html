@@ -1,6 +1,7 @@
 interface SchemaNode {
     tag: string;
     children?: Array<SchemaNode> | string | number;
+    extraAttrs?: object; // 有时候如果需要添加和tag或者children相同的属性时，在这里添加，否则不要设定这个值
     [propName: string]: any;
 }
 
@@ -9,6 +10,7 @@ interface Config {
     wrap?: boolean; // 是否换行显示
     indent?: number; // 缩进，最大支持到8
     htmlOnly?: boolean; // 是否只允许html标签
+    tagKey?: string; // 获取 tag 的字段
 }
 
 const defaultConfig: Config = {
@@ -26,26 +28,40 @@ const allowedTags: Array<string> = [
  * object --> value="value" name="name"
  * @param {e} schema
  */
-function resolveAttrs(attrsObject: any) {
+function resolveAttrs(attrsObject: any, extraAttrsObject?: object) {
 
-    if (typeof attrsObject === 'object' && JSON.stringify(attrsObject) === '{}') {
+    let attrs = Object.assign(attrsObject, extraAttrsObject);
+
+    if (typeof attrs === 'object' && JSON.stringify(attrs) === '{}') {
         return '';
     }
 
     return ' ' + Object.keys(attrsObject).map(key => `${key}="${attrsObject[key]}"`).join(' ');
 }
 
-function jsonToHtml(schema: SchemaNode | Array<SchemaNode>, config?: Config, depth: number = 0): string {
+function jsonToHtml(schema: SchemaNode | Array<SchemaNode> | string | number, config?: Config, depth: number = 0): string {
 
     if (Array.isArray(schema)) {
         return schema.map(childSchema => jsonToHtml(childSchema, config, depth)).join('');
     }
 
-    let {tag, children, ...rest} = schema;
-    let {raw, wrap, indent, htmlOnly} = Object.assign(defaultConfig, config);
+    let {
+        raw,
+        wrap,
+        indent,
+        htmlOnly,
+        tagKey
+    } = Object.assign(defaultConfig, config);
 
     let indentToken = wrap ? ' '.repeat(depth * Math.min(indent as number, 8)) : '';
     let wrapToken = wrap ? '\n' : ''
+
+    if (typeof schema === 'string' || typeof schema === 'number') {
+        return indentToken + schema + wrapToken;
+    }
+
+    let {[tagKey || 'tag']: tag, children, extraAttrs, ...rest} = schema;
+    // let tag = schema[];
 
     // if (htmlOnly && !~allowedTags.indexOf(tag)) {
     //     console.error('当前标签不符合标准html');
@@ -53,7 +69,7 @@ function jsonToHtml(schema: SchemaNode | Array<SchemaNode>, config?: Config, dep
     // }
 
     // let leftTag = `${indentToken}<${tag}${attrs} data-depth="${depth}">`;
-    let leftTag = `${indentToken}<${tag}${resolveAttrs(rest)}>`;
+    let leftTag = `${indentToken}<${tag}${resolveAttrs(rest, extraAttrs)}>`;
     let rightTag = `</${tag}>${wrapToken}`;
 
     let content: string | number = '';
