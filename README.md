@@ -59,26 +59,27 @@ jsonToHtml(schema, {
     raw: false
 });
 ```
-| name   | type    | default value | description                                   |
-| ------ | ------- | ------------- | --------------------------------------------- |
-| indent | number  | 4             | indent                                        |
-| wrap   | boolean | true          | whether wrap the content or not               |
-| raw    | boolean | false         | escacpe the content.(e.g.,`<` to `&lt;`)      |
-| tagKey | string | 'tag'         | you can change your `tag key` by setting this |
+| name        | type    | default value | description                                        |
+| ----------- | ------- | ------------- | -------------------------------------------------- |
+| indent      | number  | 4             | indent                                             |
+| wrap        | boolean | true          | whether wrap the content or not                    |
+| raw         | boolean | false         | escacpe the content.(e.g.,`<` to `&lt;`)           |
+| tagKey      | string  | 'tag'         | you can change your `tag key` by setting this      |
+| childrenKey | string  | 'children'    | you can change your `children key` by setting this |
 
 # Q&A
 
-## 2. How to change tag key
+## 1. use different key to get tag or children
 ```
 const schema = {
-    rick: 'div',
-    children: [
+    type: 'div',
+    items: [
         {
-            rick: 'span',
-            children: [
+            type: 'span',
+            items: [
                 {
-                    rick: 'span',
-                    children: 'a'
+                    type: 'span',
+                    items: 'a'
                 }
             ]
         },
@@ -86,21 +87,59 @@ const schema = {
 };
 
 jsonToHtml(schema, {
-    tagKey: 'rick'
+    tagKey: 'type',
+    children: 'items'
 });
 ```
 
-## 2. What If I What Set Attributes Like `<component tag="sometag"></component>` or `<component children="somechildren"></component>`?
+## 2. tag or children key is conflict with your attribute key
 ```
 {
     tag: 'component',
     class: 'a-div',
-    extraAttrs: { // set this key only if necessary
-        tag: 'sometag',
-        children: 'somechildren'
+    extraAttrs: { // set this only if necessary
+        tag: 'sometag', // conflict with 'tag' key
+        children: 'somechildren' // conflict with 'children' key
     },
 }
-
-// result
+```
+result:
+```
 <component class="a-div" tag="sometag" children="somechildren"></component>
+```
+
+## 3. set true attribute value
+```
+{
+    tag: 'component',
+    disabled: true,
+    'is-active': false // omit
+}
+```
+result:
+```
+<component disabled></component>
+```
+
+> value equals: `''`, `null`, `undefined`, `NaN`, `false`. will be omitted.
+
+## 3. attribute value contains `"`
+```
+{
+    tag: 'component',
+    'on-click': 'onClick("foo")' // it's ok
+}
+```
+result:
+
+```
+// onClick("foo") ==> onClick('foo')
+<component on-click="onClick('foo')"></component>
+```
+btw, it works as well:
+```
+{
+    tag: 'component',
+    'on-click': 'onClick(\'foo\')'
+}
 ```
