@@ -26,6 +26,7 @@ const schema1 = {
             value: '1',
             disabled: true
         },
+        null,
         '纯字符串',
         {
             tag: 'div',

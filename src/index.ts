@@ -1,10 +1,3 @@
-interface SchemaNode {
-    tag: string;
-    children?: Array<SchemaNode> | string | number;
-    extraAttrs?: object; // 有时候如果需要添加和tag或者children相同的属性时，在这里添加，否则不要设定这个值
-    [propName: string]: any;
-}
-
 interface Config {
     raw?: boolean; // 显示转义字符
     wrap?: boolean; // 是否换行显示
@@ -63,7 +56,7 @@ function resolveAttrs(attrsObject: any, extraAttrsObject?: object) {
     return ' ' + attrStrings.join(' ');
 }
 
-function jsonToHtml(schema: SchemaNode | Array<SchemaNode> | string | number, config?: Config, depth: number = 0): string {
+function jsonToHtml(schema: any | Array<any> | string | number, config?: Config, depth: number = 0): string {
 
     if (Array.isArray(schema)) {
         return schema.map(childSchema => jsonToHtml(childSchema, config, depth)).join('');
@@ -80,6 +73,10 @@ function jsonToHtml(schema: SchemaNode | Array<SchemaNode> | string | number, co
 
     let indentToken = wrap ? ' '.repeat(depth * Math.min(indent as number, 8)) : '';
     let wrapToken = wrap ? '\n' : ''
+
+    if (!schema && schema !== 0) {
+        return '';
+    }
 
     if (typeof schema === 'string' || typeof schema === 'number') {
         return indentToken + schema + wrapToken;
@@ -114,7 +111,7 @@ function jsonToHtml(schema: SchemaNode | Array<SchemaNode> | string | number, co
         } else if (typeof children === 'object') {
             content = jsonToHtml(children, config, depth + 1);
         } else if (Array.isArray(children)) {
-            content = children.map((child: SchemaNode) => jsonToHtml(child, config, depth + 1)).join('');
+            content = children.map(child => jsonToHtml(child, config, depth + 1)).join('');
         }
 
         leftTag = leftTag + wrapToken;
