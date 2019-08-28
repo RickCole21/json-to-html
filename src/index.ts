@@ -11,6 +11,7 @@ interface Config {
     indent?: number; // 缩进，最大支持到8
     htmlOnly?: boolean; // 是否只允许html标签
     tagKey?: string; // 获取 tag 的字段
+    childrenKey?: string; // 获取 children 的字段
 }
 
 const defaultConfig: Config = {
@@ -21,12 +22,14 @@ const defaultConfig: Config = {
 };
 
 const allowedTags: Array<string> = [
-
+    // todo
 ];
 
 /**
  * object --> value="value" name="name"
- * @param {e} schema
+ *
+ * @param attrsObject
+ * @param extraAttrsObject
  */
 function resolveAttrs(attrsObject: any, extraAttrsObject?: object) {
 
@@ -36,7 +39,28 @@ function resolveAttrs(attrsObject: any, extraAttrsObject?: object) {
         return '';
     }
 
-    return ' ' + Object.keys(attrsObject).map(key => `${key}="${attrsObject[key]}"`).join(' ');
+    let attrStrings = Object.keys(attrsObject).map(attrKey => {
+        let attrValue = attrsObject[attrKey];
+
+        // deal: <com disabled></com>
+        if (attrValue === true) {
+            return attrKey;
+        }
+
+        // deal: '', undefined, null, NaN, false，则不显示该attr
+        if (!attrValue && attrValue !== 0) {
+            return '';
+        }
+
+        // deal: <tag on-click="onClick("xx")"></tag>
+        if (~attrValue.indexOf('"')) {
+            attrValue = attrValue.replace(/"/g, '\'');
+        }
+
+        return `${attrKey}="${attrValue}"`;
+    }).filter(i => !!i);
+
+    return ' ' + attrStrings.join(' ');
 }
 
 function jsonToHtml(schema: SchemaNode | Array<SchemaNode> | string | number, config?: Config, depth: number = 0): string {
@@ -50,7 +74,8 @@ function jsonToHtml(schema: SchemaNode | Array<SchemaNode> | string | number, co
         wrap,
         indent,
         htmlOnly,
-        tagKey
+        tagKey,
+        childrenKey
     } = Object.assign(defaultConfig, config);
 
     let indentToken = wrap ? ' '.repeat(depth * Math.min(indent as number, 8)) : '';
@@ -60,7 +85,12 @@ function jsonToHtml(schema: SchemaNode | Array<SchemaNode> | string | number, co
         return indentToken + schema + wrapToken;
     }
 
-    let {[tagKey || 'tag']: tag, children, extraAttrs, ...rest} = schema;
+    let {
+        [tagKey || 'tag']: tag,
+        [childrenKey || 'children']: children,
+        extraAttrs,
+        ...rest
+    } = schema;
     // let tag = schema[];
 
     // if (htmlOnly && !~allowedTags.indexOf(tag)) {

@@ -7,6 +7,7 @@ const schema1 = {
         {
             tag: 'div',
             class: 'innerDiv1',
+            'on-click': 'onClick(\'a\')',
             children: [
                 {
                     tag: 'p',
@@ -16,7 +17,16 @@ const schema1 = {
                     tag: 'h1',
                     children: 'h1h1h1h1'
                 },
+
             ]
+        },
+        {
+            tag: 'input',
+            name: 'input',
+            value: '1',
+            disabled: {
+                a: 'a'
+            }
         },
         '纯字符串',
         {
