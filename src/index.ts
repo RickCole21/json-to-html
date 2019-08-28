@@ -53,7 +53,7 @@ function resolveAttrs(attrsObject: any, extraAttrsObject?: object) {
         }
 
         // deal: <tag on-click="onClick("xx")"></tag>
-        if (~attrValue.indexOf('"')) {
+        if (typeof attrValue === 'string' && ~attrValue.indexOf('"')) {
             attrValue = attrValue.replace(/"/g, '\'');
         }
 

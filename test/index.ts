@@ -24,9 +24,7 @@ const schema1 = {
             tag: 'input',
             name: 'input',
             value: '1',
-            disabled: {
-                a: 'a'
-            }
+            disabled: true
         },
         '纯字符串',
         {
