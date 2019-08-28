@@ -123,7 +123,7 @@ result:
 
 > value equals: `''`, `null`, `undefined`, `NaN`, `false`. will be omitted.
 
-## 3. attribute value contains `"`
+## 4. attribute value contains `"`
 ```
 {
     tag: 'component',
